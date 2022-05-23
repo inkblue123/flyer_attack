@@ -1,0 +1,32 @@
+<RCC>
+    <qresource prefix="/">
+        <file>images/fei.png</file>
+        <file>images/enemy_bullet1.png</file>
+        <file>images/player_bullet1_1.png</file>
+        <file>images/player_bullet1_2.png</file>
+        <file>images/player_bullet1_3.png</file>
+        <file>images/player_bullet1_4.png</file>
+        <file>images/2enemy.png</file>
+        <file>images/1enemy.png</file>
+        <file>level/level_1.txt</file>
+        <file>level/level_0.txt</file>
+        <file>level/level_2.txt</file>
+        <file>images/iten_1.png</file>
+        <file>images/player_bullet2_1.png</file>
+        <file>images/player_bullet2_2.png</file>
+        <file>images/player_bullet2_3.png</file>
+        <file>images/player_bullet2_4.png</file>
+        <file>images/player_bullet2_5.png</file>
+        <file>images/logo.ico</file>
+        <file>level/level_998.txt</file>
+        <file>images/wingman_1.png</file>
+        <file>images/player2.png</file>
+        <file>images/background.png</file>
+        <file>music/starwars.mp3</file>
+        <file>images/player1.png</file>
+        <file>images/player3.png</file>
+        <file>images/player4.png</file>
+        <file>level/level_999.txt</file>
+        <file>images/player_bullet1_5.png</file>
+    </qresource>
+</RCC>

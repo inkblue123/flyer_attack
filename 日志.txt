@@ -1,0 +1,147 @@
+我方散弹是把一个子弹图片倾斜一定角度后使用的，碰撞体积是倾斜之后的图片大小，所以有些子弹碰撞体积会大一些
+更新装备之后把武器的发射间隔重新计数，所以连续切换子弹会“卡顿”
+#include "config.h"
+
+Config::Config(std::string filename)
+{
+//    fp.setFileName(filename.c_str());//test
+}
+std::string Config::readCfg(std::string key)
+{
+//    return key;
+//    std::string line;
+//    if(fp.open(QIODevice::ReadOnly))
+//    {
+//        QByteArray a=fp.readLine();
+//        line=(std::string)a;
+//        qDebug("%s",line.c_str());
+//    }
+
+//    fp.close();
+}
+
+写配置
+
+QSettings settings("Option.ini", QSettings::IniFormat); // 当前目录的INI文件
+settings.beginGroup("DevOption");//创建所属组，并开始创建
+settings.setValue("mainFun", 25);//添加组成员，并设置它的值
+settings.setValue("subFun", 40);
+settings.setValue("service", 1);
+settings.endGroup();// 结束创建
+
+读配置
+
+QSettings settings("Option.ini", QSettings::IniFormat);
+
+int mainFun = settings.value("DevOption/mainFun").toInt();　　// 获取文件中属于DevOption中mainFun的值
+int subFun = settings.value("DevOption/subFun").toInt(); QString service = settings.value("DevOption/service").toString();
+
+QWidget * sec = new QWidget; // 创建窗口，显示窗口的边框
+sec->setObjectName("sec");
+//border是显示出来边框的大小，solid是颜色， border-radius是圆角
+sec->setStyleSheet("QWidget#sec{border: 1px solid #FF00FF; border-radius: 5px;}");
+
+QString Config::readCfg(QString key)//从文件中读配置，和下面的写配置函数一起使用
+{
+    int num=0;
+    int flag=0;
+    QString line;
+    QString value="";
+    QString leftstr;
+    fp.open(QIODevice::ReadOnly|QIODevice::Text);
+
+    while(!fp.atEnd())
+    {
+        line=fp.readLine();
+        if(line.indexOf(NOTE) != -1)
+        {//判断这一行是否有注释符号
+            line=line.left(line.indexOf(NOTE));//只取注释左侧的内容
+        }
+        num=line.indexOf('=');
+        if(num == -1)
+        {//判断是否有‘=’符号，有这符号说明这一行是配置内容
+            continue;
+        }
+        leftstr=line.left(num);//暂时截取等号左半边的内容
+        if(leftstr.compare(key,Qt::CaseSensitive))
+        {//判断这一行的key是否和需求相等
+            continue;
+        }
+        //去除其他特殊符号
+        line.remove(' ');
+        line.remove('\n');
+        value=line.mid(line.indexOf('=')+1);
+        flag=1;
+        break;
+    }
+    fp.close();
+
+    if(flag==0)
+    {//配置中没有key
+        qDebug()<<"error : 配置中没有找到key:"<<key;
+    }
+    return value;
+}
+int Config::writeCfg(QString key,QString value)//资源文件只能读不能写，这个函数是费案了
+{
+
+    QFile tem_fp("./temporary.txt");
+    fp.open(QIODevice::ReadWrite|QIODevice::Text);
+    tem_fp.open(QIODevice::ReadWrite|QIODevice::Text);
+
+    int num=0;
+    int flag=0;
+    QString line;
+    QString notestr;
+    QString leftstr;
+    while(!fp.atEnd())
+    {
+        line=fp.readLine();
+        if(line.indexOf(NOTE) != -1)
+        {//判断这一行是否有注释符号
+            notestr=line.left(line.indexOf(NOTE));//只取注释左侧的内容
+        }
+        num=notestr.indexOf('=');
+        if(num == -1)
+        {//判断是否有‘=’符号，有这符号说明这一行是配置内容
+            tem_fp.write(line.toStdString().data());
+            continue;
+        }
+        leftstr=notestr.left(num);//暂时截取等号左半边的内容
+        if(leftstr.compare(key,Qt::CaseSensitive))
+        {//判断这一行的key是否和需求相等
+            tem_fp.write(line.toStdString().data());
+            continue;
+        }
+        //修改value，覆盖原本内容
+        line=key+" = "+value+"\n";
+        tem_fp.write(line.toStdString().data());
+        flag=1;
+        break;
+    }
+    while(!fp.atEnd())
+    {
+        line=fp.readLine();
+        tem_fp.write(line.toStdString().data());
+    }
+    if(flag==0)
+    {//遍历之后没有发现key
+        line=key+" = "+value+"\n";
+        tem_fp.write(line.toStdString().data());
+    }
+    fp.seek(0);
+
+    line=tem_fp.readAll();
+    fp.write(line.toStdString().data());
+
+    fp.close();
+    tem_fp.close();
+    tem_fp.remove();
+}
+
+
+
+
+
+
+
